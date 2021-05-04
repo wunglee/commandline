@@ -17,7 +17,12 @@ pair<string, string> CommandParser::toParameterPair(string &commandLine) const {
         throw CommandNotFoundException("没有查找到命令");
     }
     string flag = commandsTokens[0].substr(1);
-    pair<string,string> parameterPair(flag,commandsTokens[1]);
+    pair<string,string> parameterPair;
+    if(commandsTokens.size()>1){
+        parameterPair=pair<string,string>(flag,commandsTokens[1]);
+    }else{
+        parameterPair=pair<string,string>(flag, "");
+    }
     return parameterPair;
 }
 
@@ -26,14 +31,25 @@ Command CommandParser::toCommand(const pair<string, string> &parameterPair) {
     switch (valueType) {
         case StringType:return Command(parameterPair.first,parameterPair.second);
         case IntegerType:return Command(parameterPair.first, stoi(parameterPair.second));
-        case BoolType:return Command(parameterPair.first,true);
+        case BoolType:
+            if(parameterPair.second == ""){
+                return Command(parameterPair.first,true);
+            }
+            if(parameterPair.second=="true"||parameterPair.second=="false"){
+                return Command(parameterPair.first,parameterPair.second=="true"?true:false);
+            }
+            throw InvalidValueException("无效的布尔参数值");
         default:
             return Command(parameterPair.first, parameterPair.second);
     }
 }
 
 CommandParser::ValueType CommandParser::getType(std::string flag) {
-    return commandConfig.at(flag);
+    if(commandConfig.find(flag)!= commandConfig.end()){
+        return commandConfig.at(flag);
+    }else{
+        return CommandParser::StringType;
+    }
 }
 
 void CommandParser::addCommandValueType(std::string flag, CommandParser::ValueType valueType) {

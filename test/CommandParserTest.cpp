@@ -23,15 +23,16 @@ TEST(单个命令,字符型命令允许在commandline前后存在多个空格){
     testCommandValue<std::string>("   -l   local/usr   ", "l", "local/usr",commandParser);
 }
 template <typename E>
-void testException(const char *commandline) {
-    ASSERT_THROW(CommandParser().parse(commandline), E);
+void testException(const char *commandline,CommandParser& commandParser) {
+    ASSERT_THROW(commandParser.parse(commandline), E);
 }
 TEST(单个命令,字符型命令是否以横线开头){
-    testException<CommandNotFoundException>("l local/usr");
-    testException<CommandNotFoundException>("+l local/usr");
-    testException<CommandNotFoundException>("   l     local/usr   ");
-    testException<CommandNotFoundException>("   ");
-    testException<CommandNotFoundException>(" - ");
+    CommandParser commandParser;
+    testException<CommandNotFoundException>("l local/usr",commandParser);
+    testException<CommandNotFoundException>("+l local/usr",commandParser);
+    testException<CommandNotFoundException>("   l     local/usr   ",commandParser);
+    testException<CommandNotFoundException>("   ",commandParser);
+    testException<CommandNotFoundException>(" - ",commandParser);
 }
 TEST(单个命令,整型命令){
     CommandParser commandParser;
@@ -42,4 +43,15 @@ TEST(单个命令,布尔类型使用默认参数){
     CommandParser commandParser;
     commandParser.addCommandValueType("d",CommandParser::BoolType);
     testCommandValue<bool>("-d", "d", true,commandParser);
+}
+TEST(单个命令,布尔类型使用指定参数){
+    CommandParser commandParser;
+    commandParser.addCommandValueType("d",CommandParser::BoolType);
+    testCommandValue<bool>("-d false", "d", false,commandParser);
+    testCommandValue<bool>("-d true", "d", true,commandParser);
+}
+TEST(单个命令,布尔类型使用非指定参数){
+    CommandParser commandParser;
+    commandParser.addCommandValueType("d",CommandParser::BoolType);
+    testException<InvalidValueException>(" -d ee ",commandParser);
 }
