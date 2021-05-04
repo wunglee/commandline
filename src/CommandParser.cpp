@@ -12,5 +12,9 @@ Command CommandParser::parse(std::string commandLine) {
     vector<string> commandsTokens;
     boost::split_regex( commandsTokens, commandLine, regex("\\s+"));
     string flag = commandsTokens[0].substr(1);
-    return Command(flag,commandsTokens[1]);
+    try{
+        return Command(flag,std::stoi(commandsTokens[1]));
+    }catch(...){
+        return Command(flag,commandsTokens[1]);
+    }
 }
