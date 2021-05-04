@@ -5,9 +5,9 @@
 
 class Command {
 public:
-    std::string flag;
-    boost::any value;
-    Command(const std::string &flag, const boost::any &value) : flag(flag), value(value) {}
+    const std::string flag_;
+    const boost::any value_;
+    Command(const std::string &flag, const boost::any &value) : flag_(flag), value_(value) {}
 };
 
 
