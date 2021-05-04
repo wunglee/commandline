@@ -13,6 +13,9 @@ TEST(单个命令,字符型命令){
 TEST(单个命令,字符型命令允许在flag和value之间存在多个空格){
     testStringValueCommand("-l   local/usr", "l", "local/usr");
 }
+TEST(单个命令,字符型命令允许在commandline前后存在多个空格){
+    testStringValueCommand("   -l   local/usr   ", "l", "local/usr");
+}
 TEST(单个命令,字符型命令是否以横线开头){
     CommandParser commandParser;
     ASSERT_THROW(commandParser.parse("l local/usr"),InvalidCommandLineException);
