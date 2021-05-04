@@ -16,17 +16,18 @@ TEST(单个命令,字符型命令允许在flag和value之间存在多个空格){
 TEST(单个命令,字符型命令允许在commandline前后存在多个空格){
     testCommandValue<std::string>("   -l   local/usr   ", "l", "local/usr");
 }
-void testInvalidCommandLineException(const char *commandline){
-    ASSERT_THROW(CommandParser().parse(commandline), InvalidCommandLineException);
+template <typename E>
+void testException(const char *commandline) {
+    ASSERT_THROW(CommandParser().parse(commandline), E);
 }
 TEST(单个命令,字符型命令是否以横线开头){
-    testInvalidCommandLineException("l local/usr");
-    testInvalidCommandLineException("+l local/usr");
-    testInvalidCommandLineException("   l     local/usr   ");
+    testException<InvalidCommandLineException>("l local/usr");
+    testException<InvalidCommandLineException>("+l local/usr");
+    testException<InvalidCommandLineException>("   l     local/usr   ");
 }
 TEST(单个命令,整型命令){
     testCommandValue<int>("-p 8080", "p", 8080);
 }
 TEST(单个命令,没有找到命令){
-    ASSERT_THROW(CommandParser().parse(" - "), CommandNotFoundException);
+    testException<CommandNotFoundException>(" - ");
 }
