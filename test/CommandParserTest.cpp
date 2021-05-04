@@ -27,3 +27,6 @@ TEST(单个命令,字符型命令是否以横线开头){
 TEST(单个命令,整型命令){
     testCommandValue<int>("-p 8080", "p", 8080);
 }
+TEST(单个命令,没有找到命令){
+    ASSERT_THROW(CommandParser().parse(" - "), CommandNotFoundException);
+}
