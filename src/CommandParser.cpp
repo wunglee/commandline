@@ -21,8 +21,9 @@ Command CommandParser::parse(std::string commandLine) {
 }
 
 CommandParser::ValueType CommandParser::getType(std::string flag) {
-    map<string,ValueType> commandConfig;
-    commandConfig["l"]=CommandParser::StringType;
-    commandConfig["p"]=CommandParser::IntegerType;
     return commandConfig.at(flag);
+}
+
+void CommandParser::addCommandValueType(std::string flag, CommandParser::ValueType valueType) {
+    commandConfig[flag]=valueType;
 }
