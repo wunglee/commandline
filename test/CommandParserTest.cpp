@@ -38,3 +38,8 @@ TEST(单个命令,整型命令){
     commandParser.addCommandValueType("p",CommandParser::IntegerType);
     testCommandValue<int>("-p 8080", "p", 8080,commandParser);
 }
+TEST(单个命令,布尔类型使用默认参数){
+    CommandParser commandParser;
+    commandParser.addCommandValueType("d",CommandParser::BoolType);
+    testCommandValue<bool>("-d", "d", true,commandParser);
+}

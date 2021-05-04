@@ -3,7 +3,7 @@
 #include "Command.h"
 class CommandParser{
 public:
-    enum ValueType{IntegerType, StringType};
+    enum ValueType{IntegerType, StringType,BoolType};
     Command parse(std::string commandLine);
     void addCommandValueType(std::string flag,ValueType valueType);
 private:

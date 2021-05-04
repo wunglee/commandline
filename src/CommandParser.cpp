@@ -26,6 +26,7 @@ Command CommandParser::toCommand(const pair<string, string> &parameterPair) {
     switch (valueType) {
         case StringType:return Command(parameterPair.first,parameterPair.second);
         case IntegerType:return Command(parameterPair.first, stoi(parameterPair.second));
+        case BoolType:return Command(parameterPair.first,true);
         default:
             return Command(parameterPair.first, parameterPair.second);
     }
