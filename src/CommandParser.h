@@ -9,5 +9,9 @@ public:
 private:
     std::map<std::string,ValueType> commandConfig;
     ValueType getType(std::string flag);
+
+    Command toCommand(const std::pair<std::string, std::string> &parameterPair);
+
+    std::pair<std::string, std::string> toParameterPair(std::string &commandLine) const;
 };
 #endif //ARGS_COMMANDPARSER_H

@@ -6,6 +6,10 @@
 using namespace std;
 using namespace boost;
 Command CommandParser::parse(std::string commandLine) {
+    return toCommand(toParameterPair(commandLine));
+}
+
+pair<string, string> CommandParser::toParameterPair(string &commandLine) const {
     trim(commandLine);
     vector<string> commandsTokens;
     split_regex( commandsTokens, commandLine, regex("\\s+"));
@@ -13,10 +17,17 @@ Command CommandParser::parse(std::string commandLine) {
         throw CommandNotFoundException("没有查找到命令");
     }
     string flag = commandsTokens[0].substr(1);
-    ValueType valueType=getType(flag);
+    pair<string,string> parameterPair(flag,commandsTokens[1]);
+    return parameterPair;
+}
+
+Command CommandParser::toCommand(const pair<string, string> &parameterPair) {
+    ValueType valueType= getType(parameterPair.first);
     switch (valueType) {
-        case StringType:return Command(flag,commandsTokens[1]);
-        case IntegerType:return Command(flag,std::stoi(commandsTokens[1]));
+        case StringType:return Command(parameterPair.first,parameterPair.second);
+        case IntegerType:return Command(parameterPair.first, stoi(parameterPair.second));
+        default:
+            return Command(parameterPair.first, parameterPair.second);
     }
 }
 
