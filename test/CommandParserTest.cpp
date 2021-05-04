@@ -3,8 +3,7 @@
 #include "../src/Exceptions.h"
 template <typename T>
 void testCommandValue(const char *commandline, const char *flag, const T value){
-    CommandParser commandParser;
-    Command result = commandParser.parse(commandline);
+    Command result = CommandParser().parse(commandline);
     ASSERT_EQ(result.flag_, flag);
     ASSERT_EQ(boost::any_cast<T>(result.value_), value);
 }
@@ -18,8 +17,7 @@ TEST(单个命令,字符型命令允许在commandline前后存在多个空格){
     testCommandValue<std::string>("   -l   local/usr   ", "l", "local/usr");
 }
 void testInvalidCommandLineException(const char *commandline){
-    CommandParser commandParser;
-    ASSERT_THROW(commandParser.parse(commandline), InvalidCommandLineException);
+    ASSERT_THROW(CommandParser().parse(commandline), InvalidCommandLineException);
 }
 TEST(单个命令,字符型命令是否以横线开头){
     testInvalidCommandLineException("l local/usr");
