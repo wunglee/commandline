@@ -18,13 +18,11 @@ pair<string, string> CommandParser::toParameterPair(string &commandLine) const {
         throw CommandNotFoundException("没有查找到命令");
     }
     string flag = commandsTokens[0].substr(1);
-    pair<string, string> parameterPair;
     if (commandsTokens.size() > 1) {
-        parameterPair = pair<string, string>(flag, commandsTokens[1]);
+        return pair<string, string>(flag, commandsTokens[1]);
     } else {
-        parameterPair = pair<string, string>(flag, "");
+        return pair<string, string>(flag, "");
     }
-    return parameterPair;
 }
 
 Command CommandParser::toCommand(const pair<string, string> &parameterPair) {
