@@ -55,3 +55,10 @@ TEST(单个命令,布尔类型使用非指定参数){
     commandParser.addCommandValueType("d",CommandParser::BoolType);
     testException<InvalidValueException>(" -d ee ",commandParser);
 }
+TEST(单个命令,没有指定参数) {
+    CommandParser commandParser;
+    commandParser.addCommandValueType("l", CommandParser::StringType);
+    testException<ValueNotFoundException>("-l", commandParser);
+    commandParser.addCommandValueType("p", CommandParser::IntegerType);
+    testException<ValueNotFoundException>("-p", commandParser);
+}

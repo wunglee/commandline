@@ -10,6 +10,10 @@ class CommandNotFoundException : public Exception {
 public:
     CommandNotFoundException(const std::string &message) : Exception(message) {}
 };
+class ValueNotFoundException : public Exception {
+public:
+    ValueNotFoundException(const std::string &message) : Exception(message) {}
+};
 class InvalidValueException : public Exception {
 public:
     InvalidValueException(const std::string &message) : Exception(message) {}

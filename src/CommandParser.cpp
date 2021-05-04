@@ -29,8 +29,16 @@ pair<string, string> CommandParser::toParameterPair(string &commandLine) const {
 Command CommandParser::toCommand(const pair<string, string> &parameterPair) {
     ValueType valueType= getType(parameterPair.first);
     switch (valueType) {
-        case StringType:return Command(parameterPair.first,parameterPair.second);
-        case IntegerType:return Command(parameterPair.first, stoi(parameterPair.second));
+        case StringType:
+            if(parameterPair.second == ""){
+                throw ValueNotFoundException("字符串命令没有提供参数");
+            }
+            return Command(parameterPair.first,parameterPair.second);
+        case IntegerType:
+            if(parameterPair.second == ""){
+                throw ValueNotFoundException("数值命令没有提供参数");
+            }
+            return Command(parameterPair.first, stoi(parameterPair.second));
         case BoolType:
             if(parameterPair.second == ""){
                 return Command(parameterPair.first,true);
