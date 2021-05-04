@@ -1,5 +1,6 @@
 #include "CommandParser.h"
 #include "Exceptions.h"
+#include <boost/algorithm/string/regex.hpp>
 using namespace std;
 using namespace boost;
 Command CommandParser::parse(std::string commandLine) {
