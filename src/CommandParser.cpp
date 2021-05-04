@@ -28,8 +28,8 @@ pair<string, string> CommandParser::toParameterPair(string &commandLine) const {
 }
 
 Command CommandParser::toCommand(const pair<string, string> &parameterPair) {
-    ValueType valueType = getType(parameterPair.first);
-    CommandBuilder *commandBuilder = getCommandBuilder(valueType);
+    CommandBuilder::ValueType valueType = getType(parameterPair.first);
+    CommandBuilder *commandBuilder = CommandBuilderFactory::getCommandBuilder(valueType);
     if (commandBuilder == nullptr) {
         return Command(parameterPair.first, parameterPair.second);
     }
@@ -38,51 +38,17 @@ Command CommandParser::toCommand(const pair<string, string> &parameterPair) {
     return command;
 }
 
-CommandParser::ValueType CommandParser::getType(std::string flag) {
+CommandBuilder::ValueType CommandParser::getType(std::string flag) {
     if (commandConfig.find(flag) != commandConfig.end()) {
         return commandConfig.at(flag);
     } else {
-        return CommandParser::StringType;
+        return CommandBuilder::StringType;
     }
 }
 
-void CommandParser::addCommandValueType(std::string flag, CommandParser::ValueType valueType) {
+void CommandParser::addCommandValueType(std::string flag, CommandBuilder::ValueType valueType) {
     commandConfig[flag] = valueType;
 }
 
-CommandBuilder *CommandParser::getCommandBuilder(CommandParser::ValueType valueType) {
-    switch (valueType) {
-        case StringType:
-            return new StringCommandBuilder();
-        case IntegerType:
-            return new IntegerCommandBuilder();
-        case BoolType:
-            return new BoolCommandBuilder();
-        default:
-            return nullptr;
-    }
-}
 
-Command IntegerCommandBuilder::buildCommand(const pair<std::string, std::string> &parameterPair) {
-    if (parameterPair.second == "") {
-        throw ValueNotFoundException("数值命令没有提供参数");
-    }
-    return Command(parameterPair.first, stoi(parameterPair.second));
-}
 
-Command StringCommandBuilder::buildCommand(const pair<std::string, std::string> &parameterPair) {
-    if (parameterPair.second == "") {
-        throw ValueNotFoundException("字符串命令没有提供参数");
-    }
-    return Command(parameterPair.first, parameterPair.second);
-}
-
-Command BoolCommandBuilder::buildCommand(const pair<std::string, std::string> &parameterPair) {
-    if (parameterPair.second == "") {
-        return Command(parameterPair.first, true);
-    }
-    if (parameterPair.second == "true" || parameterPair.second == "false") {
-        return Command(parameterPair.first, parameterPair.second == "true" ? true : false);
-    }
-    throw InvalidValueException("无效的布尔参数值");
-}

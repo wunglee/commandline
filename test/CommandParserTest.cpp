@@ -9,17 +9,17 @@ void testCommandValue(const char *commandline, const char *flag, const T value,C
 }
 TEST(单个命令,字符型命令){
     CommandParser commandParser;
-    commandParser.addCommandValueType("l",CommandParser::StringType);
+    commandParser.addCommandValueType("l",CommandBuilder::StringType);
     testCommandValue<std::string>("-l local/usr", "l", "local/usr",commandParser);
 }
 TEST(单个命令,字符型命令允许在flag和value之间存在多个空格){
     CommandParser commandParser;
-    commandParser.addCommandValueType("l",CommandParser::StringType);
+    commandParser.addCommandValueType("l",CommandBuilder::StringType);
     testCommandValue<std::string>("-l   local/usr", "l", "local/usr",commandParser);
 }
 TEST(单个命令,字符型命令允许在commandline前后存在多个空格){
     CommandParser commandParser;
-    commandParser.addCommandValueType("l",CommandParser::StringType);
+    commandParser.addCommandValueType("l",CommandBuilder::StringType);
     testCommandValue<std::string>("   -l   local/usr   ", "l", "local/usr",commandParser);
 }
 template <typename E>
@@ -36,29 +36,29 @@ TEST(单个命令,字符型命令是否以横线开头){
 }
 TEST(单个命令,整型命令){
     CommandParser commandParser;
-    commandParser.addCommandValueType("p",CommandParser::IntegerType);
+    commandParser.addCommandValueType("p",CommandBuilder::IntegerType);
     testCommandValue<int>("-p 8080", "p", 8080,commandParser);
 }
 TEST(单个命令,布尔类型使用默认参数){
     CommandParser commandParser;
-    commandParser.addCommandValueType("d",CommandParser::BoolType);
+    commandParser.addCommandValueType("d",CommandBuilder::BoolType);
     testCommandValue<bool>("-d", "d", true,commandParser);
 }
 TEST(单个命令,布尔类型使用指定参数){
     CommandParser commandParser;
-    commandParser.addCommandValueType("d",CommandParser::BoolType);
+    commandParser.addCommandValueType("d",CommandBuilder::BoolType);
     testCommandValue<bool>("-d false", "d", false,commandParser);
     testCommandValue<bool>("-d true", "d", true,commandParser);
 }
 TEST(单个命令,布尔类型使用非指定参数){
     CommandParser commandParser;
-    commandParser.addCommandValueType("d",CommandParser::BoolType);
+    commandParser.addCommandValueType("d",CommandBuilder::BoolType);
     testException<InvalidValueException>(" -d ee ",commandParser);
 }
 TEST(单个命令,没有指定参数异常) {
     CommandParser commandParser;
-    commandParser.addCommandValueType("l", CommandParser::StringType);
+    commandParser.addCommandValueType("l", CommandBuilder::StringType);
     testException<ValueNotFoundException>("-l", commandParser);
-    commandParser.addCommandValueType("p", CommandParser::IntegerType);
+    commandParser.addCommandValueType("p", CommandBuilder::IntegerType);
     testException<ValueNotFoundException>("-p", commandParser);
 }
