@@ -13,9 +13,16 @@ Command CommandParser::parse(std::string commandLine) {
         throw CommandNotFoundException("没有查找到命令");
     }
     string flag = commandsTokens[0].substr(1);
-    try{
-        return Command(flag,std::stoi(commandsTokens[1]));
-    }catch(...){
-        return Command(flag,commandsTokens[1]);
+    ValueType valueType=getType(flag);
+    switch (valueType) {
+        case StringType:return Command(flag,commandsTokens[1]);
+        case IntegerType:return Command(flag,std::stoi(commandsTokens[1]));
     }
+}
+
+CommandParser::ValueType CommandParser::getType(std::string flag) {
+    if(flag=="l")
+      return CommandParser::StringType;
+    if(flag=="p")
+        return CommandParser::IntegerType;
 }
