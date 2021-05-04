@@ -21,13 +21,12 @@ void testException(const char *commandline) {
     ASSERT_THROW(CommandParser().parse(commandline), E);
 }
 TEST(单个命令,字符型命令是否以横线开头){
-    testException<InvalidCommandLineException>("l local/usr");
-    testException<InvalidCommandLineException>("+l local/usr");
-    testException<InvalidCommandLineException>("   l     local/usr   ");
+    testException<CommandNotFoundException>("l local/usr");
+    testException<CommandNotFoundException>("+l local/usr");
+    testException<CommandNotFoundException>("   l     local/usr   ");
+    testException<CommandNotFoundException>("   ");
+    testException<CommandNotFoundException>(" - ");
 }
 TEST(单个命令,整型命令){
     testCommandValue<int>("-p 8080", "p", 8080);
-}
-TEST(单个命令,没有找到命令){
-    testException<CommandNotFoundException>(" - ");
 }
