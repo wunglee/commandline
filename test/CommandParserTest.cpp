@@ -4,9 +4,9 @@
 #include <boost/optional/optional_io.hpp>
 template <typename T>
 void testCommandValue(std::string commandline,const std::string flag, const T value,CommandParser& commandParser){
-    Command result = commandParser.parse(commandline);
-    ASSERT_EQ(result.flag_, flag);
-    ASSERT_EQ(boost::any_cast<T>(result.value_), value);
+    std::vector<Command> results = commandParser.parse(commandline);
+    ASSERT_EQ(results[0].flag_, flag);
+    ASSERT_EQ(boost::any_cast<T>(results[0].value_), value);
 }
 template <typename T>
 boost::optional<T> findResult(std::string flag,std::vector<Command> &results) {
@@ -83,7 +83,7 @@ TEST(多个命令,多个字符型命令) {
     commandParser.addCommandValueType("l",CommandBuilder::StringType);
     commandParser.addCommandValueType("s",CommandBuilder::StringType);
     std::string commandline="-l wer -s rtt";
-    std::vector<Command> results = commandParser.parseAll(commandline);
+    std::vector<Command> results = commandParser.parse(commandline);
     ASSERT_EQ(findResult<std::string>("l",results), std::string("wer"));
     ASSERT_EQ(findResult<std::string>("s",results), std::string("rtt"));
 }

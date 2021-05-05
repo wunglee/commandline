@@ -4,10 +4,10 @@
 #include "CommandBuilder.h"
 class CommandParser{
 public:
-    Command parse(std::string &commandLine);
-    std::vector<Command> parseAll(std::string &commandLine);
+    std::vector<Command> parse(std::string &commandLine);
     void addCommandValueType(const std::string &flag,const CommandBuilder::ValueType &valueType);
 private:
+    Command parseOneCommand(std::string &commandLine);
     std::map<std::string,CommandBuilder::ValueType> commandConfig;
     CommandBuilder::ValueType getType(const std::string &flag);
     Command toCommand(const std::pair<std::string,std::string> &parameterPair);

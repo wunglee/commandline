@@ -6,27 +6,32 @@
 using namespace std;
 using namespace boost;
 
-Command CommandParser::parse(std::string &commandLine) {
+Command CommandParser::parseOneCommand(std::string &commandLine) {
     return toCommand(toParameterPair(commandLine));
 }
-vector<Command> CommandParser::parseAll(std::string &commandLine) {
-    vector<Command> v;
-    v.push_back(Command("l",std::string("wer")));
-    v.push_back(Command("s",std::string("rtt")));
-    return v;
-}
-pair<string, string> CommandParser::toParameterPair(string &commandLine) const {
-    trim(commandLine);
-    vector<string> commandsTokens;
-    split_regex(commandsTokens, commandLine, regex("\\s+"));
-    if (!regex_match(commandsTokens[0], regex("-\\w+"))) {
+vector<Command> CommandParser::parse(std::string &commandLine) {
+    vector<Command> commands;
+    if (!regex_search(commandLine, regex("-\\w+"))) {
         throw CommandNotFoundException("没有查找到命令");
     }
-    string flag = commandsTokens[0].substr(1);
+    vector<string> commandsTokens;
+    split_regex(commandsTokens, commandLine, regex("-"));
+    for(string oneCommandLine:commandsTokens){
+        trim(oneCommandLine);
+        if(oneCommandLine==""){
+            continue;
+        }
+        commands.push_back(parseOneCommand(oneCommandLine));
+    }
+    return commands;
+}
+pair<string, string> CommandParser::toParameterPair(string &commandLine) const {
+    vector<string> commandsTokens;
+    split_regex(commandsTokens, commandLine, regex("\\s+"));
     if (commandsTokens.size() > 1) {
-        return pair<string, string>(flag, commandsTokens[1]);
+        return pair<string, string>(commandsTokens[0], commandsTokens[1]);
     } else {
-        return pair<string, string>(flag, "");
+        return pair<string, string>(commandsTokens[0], "");
     }
 }
 
