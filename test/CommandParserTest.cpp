@@ -152,3 +152,15 @@ TEST(单个命令,整型列表型命令值) {
     expected.push_back(7);
     ASSERT_EQ(result,expected);
 }
+TEST(单个命令,布尔列表型命令值) {
+    CommandParser commandParser;
+    commandParser.addCommandValueType("d",CommandBuilder::BoolListType);
+    std::string commandline="-d true,false,false";
+    std::vector<Command> results = commandParser.parse(commandline);
+    std::vector<bool>  result= findResult<std::vector<bool>>("d",results).value();
+    std::vector<bool>  expected;
+    expected.push_back(true);
+    expected.push_back(false);
+    expected.push_back(false);
+    ASSERT_EQ(result,expected);
+}
