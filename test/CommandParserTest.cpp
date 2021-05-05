@@ -128,3 +128,15 @@ TEST(单个命令,字符列表型命令值) {
     expected.push_back("esr");
     ASSERT_EQ(result,expected);
 }
+TEST(单个命令,字符列表型命令值之间允许含空格) {
+    CommandParser commandParser;
+    commandParser.addCommandValueType("s",CommandBuilder::StringListType);
+    std::string commandline=" -s ds , er , esr ";
+    std::vector<Command> results = commandParser.parse(commandline);
+    std::vector<std::string>  result= findResult<std::vector<std::string>>("s",results).value();
+    std::vector<std::string>  expected;
+    expected.push_back("ds");
+    expected.push_back("er");
+    expected.push_back("esr");
+    ASSERT_EQ(result,expected);
+}

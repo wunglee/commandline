@@ -2,6 +2,7 @@
 #define ARGS_COMMANDBUILDER_H
 #include "Exceptions.h"
 #include <boost/algorithm/string/regex.hpp>
+#include <boost/algorithm/string/trim.hpp>
 class CommandBuilder{
 public:
     enum ValueType{IntegerType, StringType,BoolType,StringListType};
@@ -46,7 +47,13 @@ public:
         }
         std::vector<std::string>  stringTokens;
         split_regex(stringTokens, parameterPair.second, boost::regex(","));
-        return Command(parameterPair.first, stringTokens);
+        std::vector<std::string>  result;
+        for(std::string token:stringTokens){
+            boost::trim(token);
+            if(token=="") continue;
+            result.push_back(token);
+        }
+        return Command(parameterPair.first, result);
     }
 };
 class CommandBuilderFactory{

@@ -25,14 +25,17 @@ vector<Command> CommandParser::parse(std::string &commandLine) {
     }
     return commands;
 }
-pair<string, string> CommandParser::toParameterPair(string &commandLine) const {
-    vector<string> commandsTokens;
-    split_regex(commandsTokens, commandLine, regex("\\s+"));
-    if (commandsTokens.size() > 1) {
-        return pair<string, string>(commandsTokens[0], commandsTokens[1]);
-    } else {
-        return pair<string, string>(commandsTokens[0], "");
+pair<string, string> CommandParser::toParameterPair(string &oneCommandLine) const {
+    int white_space_position = oneCommandLine.find(" ");
+    string flag=oneCommandLine;
+    string value="";
+    if(white_space_position!=-1){
+        flag=oneCommandLine.substr(0,white_space_position);
+        value=oneCommandLine.substr(white_space_position+1);
     }
+    trim(flag);
+    trim(value);
+    return pair<string, string>(flag, value);
 }
 
 Command CommandParser::toCommand(const pair<string, string> &parameterPair) {
