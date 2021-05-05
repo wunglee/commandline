@@ -140,3 +140,15 @@ TEST(单个命令,字符列表型命令值之间允许含空格) {
     expected.push_back("esr");
     ASSERT_EQ(result,expected);
 }
+TEST(单个命令,整型列表型命令值) {
+    CommandParser commandParser;
+    commandParser.addCommandValueType("p",CommandBuilder::IntegerListType);
+    std::string commandline="-p 2,5,7";
+    std::vector<Command> results = commandParser.parse(commandline);
+    std::vector<int>  result= findResult<std::vector<int>>("p",results).value();
+    std::vector<int>  expected;
+    expected.push_back(2);
+    expected.push_back(5);
+    expected.push_back(7);
+    ASSERT_EQ(result,expected);
+}
