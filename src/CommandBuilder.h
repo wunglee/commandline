@@ -57,9 +57,9 @@ public:
         if (parameterPair.second == "") {
             throw ValueNotFoundException("命令没有提供参数");
         }
-        std::__1::vector<std::string> stringTokens;
+        std::vector<std::string> stringTokens;
         split_regex(stringTokens, parameterPair.second, boost::regex(","));
-        std::__1::vector<T> result;
+        std::vector<T> result;
         for (std::string token:stringTokens) {
             boost::trim(token);
             if (token == "") continue;
