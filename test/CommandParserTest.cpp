@@ -3,7 +3,7 @@
 #include <boost/optional.hpp>
 #include <boost/optional/optional_io.hpp>
 template <typename T>
-void testCommandValue(std::string commandline,const std::string flag, const T value,CommandParser& commandParser){
+void testOneCommandValue(std::string commandline, const std::string flag, const T value, CommandParser& commandParser){
     std::vector<Command> results = commandParser.parse(commandline);
     ASSERT_EQ(results[0].flag_, flag);
     ASSERT_EQ(boost::any_cast<T>(results[0].value_), value);
@@ -26,17 +26,17 @@ boost::optional<T> findResult(std::string flag,std::vector<Command> &results) {
 TEST(单个命令,字符型命令){
     CommandParser commandParser;
     commandParser.addCommandValueType("l",CommandBuilder::StringType);
-    testCommandValue<std::string>("-l local/usr", "l", "local/usr",commandParser);
+    testOneCommandValue<std::string>("-l local/usr", "l", "local/usr", commandParser);
 }
 TEST(单个命令,字符型命令允许在flag和value之间存在多个空格){
     CommandParser commandParser;
     commandParser.addCommandValueType("l",CommandBuilder::StringType);
-    testCommandValue<std::string>("-l   local/usr", "l", "local/usr",commandParser);
+    testOneCommandValue<std::string>("-l   local/usr", "l", "local/usr", commandParser);
 }
 TEST(单个命令,字符型命令允许在commandline前后存在多个空格){
     CommandParser commandParser;
     commandParser.addCommandValueType("l",CommandBuilder::StringType);
-    testCommandValue<std::string>("   -l   local/usr   ", "l", "local/usr",commandParser);
+    testOneCommandValue<std::string>("   -l   local/usr   ", "l", "local/usr", commandParser);
 }
 template <typename E>
 void testException(std::string commandline,CommandParser& commandParser) {
@@ -53,23 +53,23 @@ TEST(单个命令,字符型命令是否以横线开头){
 TEST(单个命令,整型命令){
     CommandParser commandParser;
     commandParser.addCommandValueType("p",CommandBuilder::IntegerType);
-    testCommandValue<int>("-p 8080", "p", 8080,commandParser);
+    testOneCommandValue<int>("-p 8080", "p", 8080, commandParser);
 }
 TEST(单个命令,布尔类型使用默认参数){
     CommandParser commandParser;
     commandParser.addCommandValueType("d",CommandBuilder::BoolType);
-    testCommandValue<bool>("-d", "d", true,commandParser);
+    testOneCommandValue<bool>("-d", "d", true, commandParser);
 }
 TEST(单个命令,布尔类型使用指定参数){
     CommandParser commandParser;
     commandParser.addCommandValueType("d",CommandBuilder::BoolType);
-    testCommandValue<bool>("-d false", "d", false,commandParser);
-    testCommandValue<bool>("-d true", "d", true,commandParser);
+    testOneCommandValue<bool>("-d false", "d", false, commandParser);
+    testOneCommandValue<bool>("-d true", "d", true, commandParser);
 }
 TEST(单个命令,布尔类型使用非指定参数){
     CommandParser commandParser;
     commandParser.addCommandValueType("d",CommandBuilder::BoolType);
-    testCommandValue<std::string>("-l   local/usr", "l", "local/usr",commandParser);
+    testOneCommandValue<std::string>("-l   local/usr", "l", "local/usr", commandParser);
 }
 TEST(单个命令,没有指定参数异常) {
     CommandParser commandParser;
