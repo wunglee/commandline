@@ -149,3 +149,8 @@
 /cmake-build-debug/CMakeFiles/TargetDirectories.txt
 /cmake-build-debug/googletest-download/CMakeFiles/TargetDirectories.txt
 /.idea/workspace.xml
+/cmake-build-debug/googletest-src/
+/.idea/args.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
