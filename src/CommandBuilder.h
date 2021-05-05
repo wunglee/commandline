@@ -72,8 +72,8 @@ public:
 class StringListCommandBuilder : public ListCommandBuilder {
 protected:
     Command buildCommand(const std::pair<std::string, std::string> &parameterPair) override {
-        std::vector<std::string> result = toListValue<std::string>(parameterPair,
-                                                                   [](std::string s) -> std::string { return s; });
+        const std::function<std::string(std::string)> &convertToString=[](std::string s)->std::string{ boost::trim(s); return s; };
+        std::vector<std::string> result = toListValue<std::string>(parameterPair,convertToString);
         return Command(parameterPair.first, result);
     }
 };
@@ -81,19 +81,21 @@ protected:
 class IntegerListCommandBuilder : public ListCommandBuilder {
 public:
     Command buildCommand(const std::pair<std::string, std::string> &parameterPair) override {
-        std::vector<int> result = toListValue<int>(parameterPair,[](std::string s)->int{ return std::stoi(s); });
+        const std::function<int(std::string)> &convertToInt=[](std::string s)->int{ return std::stoi(s); };
+        std::vector<int> result = toListValue<int>(parameterPair,convertToInt);
         return Command(parameterPair.first, result);
     }
 };
 class BoolListCommandBuilder : public ListCommandBuilder {
 public:
     Command buildCommand(const std::pair<std::string, std::string> &parameterPair) override {
-        std::vector<bool> result = toListValue<bool>(parameterPair,[](std::string s)->bool{
+        const std::function<bool(std::string)> &convertTobool=[](std::string s)->bool{
             if(s!="true"&&s!="false"){
                 throw InvalidValueException("无效的布尔参数值");
             }
             return (s=="true")?true:false;
-        });
+        };
+        std::vector<bool> result = toListValue<bool>(parameterPair,convertTobool);
         return Command(parameterPair.first, result);
     }
 };
