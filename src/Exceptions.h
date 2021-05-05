@@ -18,6 +18,10 @@ class InvalidValueException : public Exception {
 public:
     InvalidValueException(const std::string &message) : Exception(message) {}
 };
+class AnytoTypeConvertException : public Exception {
+public:
+    AnytoTypeConvertException(const std::string &message) : Exception(message) {}
+};
 
 #endif
 

@@ -22,7 +22,7 @@ public:
         if (parameterPair.second == "") {
             throw ValueNotFoundException("字符串命令没有提供参数");
         }
-        return Command(parameterPair.first, parameterPair.second);
+        return Command(parameterPair.first, std::string(parameterPair.second));
     }
 };
 class BoolCommandBuilder: public CommandBuilder{

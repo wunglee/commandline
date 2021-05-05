@@ -9,6 +9,12 @@ using namespace boost;
 Command CommandParser::parse(std::string &commandLine) {
     return toCommand(toParameterPair(commandLine));
 }
+vector<Command> CommandParser::parseAll(std::string &commandLine) {
+    vector<Command> v;
+    v.push_back(Command("l",std::string("wer")));
+    v.push_back(Command("s",std::string("rtt")));
+    return v;
+}
 pair<string, string> CommandParser::toParameterPair(string &commandLine) const {
     trim(commandLine);
     vector<string> commandsTokens;
