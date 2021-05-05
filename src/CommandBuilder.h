@@ -42,18 +42,25 @@ public:
 class StringListCommandBuilder: public CommandBuilder{
 public:
     Command buildCommand(const std::pair<std::string, std::string> &parameterPair) override {
+        std::vector<std::string> result = toListValue<std::string>(parameterPair,[](std::string s)->std::string{ return s; });
+        return Command(parameterPair.first, result);
+    }
+
+    template<class T>
+    std::vector<std::string> toListValue(const std::pair<std::string, std::string> &parameterPair,
+    const std::function<T(std::string)>& convertToType) const {
         if (parameterPair.second == "") {
             throw ValueNotFoundException("命令没有提供参数");
         }
-        std::vector<std::string>  stringTokens;
+        std::__1::vector<std::string>  stringTokens;
         split_regex(stringTokens, parameterPair.second, boost::regex(","));
-        std::vector<std::string>  result;
+        std::__1::vector<std::string>  result;
         for(std::string token:stringTokens){
             boost::trim(token);
             if(token=="") continue;
             result.push_back(token);
         }
-        return Command(parameterPair.first, result);
+        return result;
     }
 };
 class IntegerListCommandBuilder: public CommandBuilder{
