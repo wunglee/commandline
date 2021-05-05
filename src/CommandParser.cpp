@@ -6,10 +6,9 @@
 using namespace std;
 using namespace boost;
 
-Command CommandParser::parse(std::string commandLine) {
+Command CommandParser::parse(std::string &commandLine) {
     return toCommand(toParameterPair(commandLine));
 }
-
 pair<string, string> CommandParser::toParameterPair(string &commandLine) const {
     trim(commandLine);
     vector<string> commandsTokens;
@@ -36,7 +35,7 @@ Command CommandParser::toCommand(const pair<string, string> &parameterPair) {
     return command;
 }
 
-CommandBuilder::ValueType CommandParser::getType(std::string flag) {
+CommandBuilder::ValueType CommandParser::getType(const std::string &flag) {
     if (commandConfig.find(flag) != commandConfig.end()) {
         return commandConfig.at(flag);
     } else {
@@ -44,7 +43,7 @@ CommandBuilder::ValueType CommandParser::getType(std::string flag) {
     }
 }
 
-void CommandParser::addCommandValueType(std::string flag, CommandBuilder::ValueType valueType) {
+void CommandParser::addCommandValueType(const std::string &flag, const CommandBuilder::ValueType &valueType) {
     commandConfig[flag] = valueType;
 }
 
