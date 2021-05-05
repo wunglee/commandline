@@ -155,3 +155,4 @@
 /.idea/modules.xml
 /.idea/vcs.xml
 /cmake-build-debug/Testing/Temporary/CTestCostData.txt
+/cmake-build-debug/Testing/Temporary/LastTestsFailed.log
