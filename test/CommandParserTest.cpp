@@ -12,8 +12,6 @@ template <typename T>
 boost::optional<T> findResult(std::string flag,std::vector<Command> &results) {
     for(Command command:results) {
         if (flag == command.flag_) {
-            std::string s1= typeid(T).name();
-            std::string s2= command.value_.type().name();
             if (typeid(T) == command.value_.type()) {
                 return boost::any_cast<T>(command.value_);
             } else {
@@ -115,6 +113,18 @@ TEST(多个命令,字符型数字型和布尔型命令) {
     std::string commandline="-l 8080 -s sss -t";
     std::vector<Command> results = commandParser.parse(commandline);
     ASSERT_EQ(findResult<int>("l",results), 8080);
-    ASSERT_EQ(findResult<std::string>("s",results), 　std::string("sss"));
+    ASSERT_EQ(findResult<std::string>("s",results), std::string("sss"));
     ASSERT_EQ(findResult<bool>("t",results), true);
+}
+TEST(单个命令,字符列表型命令值) {
+    CommandParser commandParser;
+    commandParser.addCommandValueType("s",CommandBuilder::StringListType);
+    std::string commandline="-s ds,er,esr";
+    std::vector<Command> results = commandParser.parse(commandline);
+    std::vector<std::string>  result= findResult<std::vector<std::string>>("s",results).value();
+    std::vector<std::string>  expected;
+    expected.push_back("ds");
+    expected.push_back("er");
+    expected.push_back("esr");
+    ASSERT_EQ(result,expected);
 }

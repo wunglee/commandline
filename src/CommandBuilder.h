@@ -1,9 +1,10 @@
 #ifndef ARGS_COMMANDBUILDER_H
 #define ARGS_COMMANDBUILDER_H
 #include "Exceptions.h"
+#include <boost/algorithm/string/regex.hpp>
 class CommandBuilder{
 public:
-    enum ValueType{IntegerType, StringType,BoolType};
+    enum ValueType{IntegerType, StringType,BoolType,StringListType};
     virtual Command buildCommand(const std::pair<std::string, std::string> &parameterPair)=0;
     virtual ~CommandBuilder() {};
 };
@@ -37,6 +38,17 @@ public:
         throw InvalidValueException("无效的布尔参数值");
     }
 };
+class StringListCommandBuilder: public CommandBuilder{
+public:
+    Command buildCommand(const std::pair<std::string, std::string> &parameterPair) override {
+        if (parameterPair.second == "") {
+            throw ValueNotFoundException("字符串命令没有提供参数");
+        }
+        std::vector<std::string>  stringTokens;
+        split_regex(stringTokens, parameterPair.second, boost::regex(","));
+        return Command(parameterPair.first, stringTokens);
+    }
+};
 class CommandBuilderFactory{
 public:
     static CommandBuilder* getCommandBuilder(CommandBuilder::ValueType valueType) {
@@ -47,6 +59,8 @@ public:
                 return new IntegerCommandBuilder();
             case CommandBuilder::BoolType:
                 return new BoolCommandBuilder();
+            case CommandBuilder::StringListType:
+                return new StringListCommandBuilder();
             default:
                 return nullptr;
         }
