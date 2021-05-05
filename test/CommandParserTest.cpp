@@ -87,3 +87,34 @@ TEST(多个命令,多个字符型命令) {
     ASSERT_EQ(findResult<std::string>("l",results), std::string("wer"));
     ASSERT_EQ(findResult<std::string>("s",results), std::string("rtt"));
 }
+TEST(多个命令,多个数字型命令) {
+    CommandParser commandParser;
+    commandParser.addCommandValueType("l",CommandBuilder::IntegerType);
+    commandParser.addCommandValueType("s",CommandBuilder::IntegerType);
+    std::string commandline="-l 80 -s 999";
+    std::vector<Command> results = commandParser.parse(commandline);
+    ASSERT_EQ(findResult<int>("l",results), 80);
+    ASSERT_EQ(findResult<int>("s",results), 999);
+}
+TEST(多个命令,多个布尔型命令) {
+    CommandParser commandParser;
+    commandParser.addCommandValueType("l",CommandBuilder::BoolType);
+    commandParser.addCommandValueType("s",CommandBuilder::BoolType);
+    commandParser.addCommandValueType("t",CommandBuilder::BoolType);
+    std::string commandline="-l -s false -t true";
+    std::vector<Command> results = commandParser.parse(commandline);
+    ASSERT_EQ(findResult<bool>("l",results), true);
+    ASSERT_EQ(findResult<bool>("s",results), false);
+    ASSERT_EQ(findResult<bool>("t",results), true);
+}
+TEST(多个命令,字符型数字型和布尔型命令) {
+    CommandParser commandParser;
+    commandParser.addCommandValueType("l",CommandBuilder::IntegerType);
+    commandParser.addCommandValueType("s",CommandBuilder::StringType);
+    commandParser.addCommandValueType("t",CommandBuilder::BoolType);
+    std::string commandline="-l 8080 -s sss -t";
+    std::vector<Command> results = commandParser.parse(commandline);
+    ASSERT_EQ(findResult<int>("l",results), 8080);
+    ASSERT_EQ(findResult<std::string>("s",results), 　std::string("sss"));
+    ASSERT_EQ(findResult<bool>("t",results), true);
+}
