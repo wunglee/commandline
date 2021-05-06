@@ -2,6 +2,7 @@
 #define ARGS_CONVERTORS_H
 #include <boost/algorithm/string/trim.hpp>
 #include "Exceptions.h"
+#include <boost/format.hpp>
 class Convertors{
 public:
     static std::string converToString(std::string valueString) {
@@ -12,12 +13,14 @@ public:
         try{
             return stoi(intString);
         }catch(...){
-            throw InvalidValueException("无效的整型参数值");
+            boost::format f = boost::format("无效的整型参数值:%s")%intString;
+            throw InvalidValueException(f.str());
         }
     }
     static bool convertTobool(const std::string &boolString) {
         if (boolString != "true" && boolString != "false") {
-            throw InvalidValueException("无效的布尔参数值");
+            boost::format f = boost::format("无效的布尔参数值:%s")%boolString;
+            throw InvalidValueException(f.str());
         }
         return boolString=="true" ? true : false;
     }

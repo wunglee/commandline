@@ -12,7 +12,8 @@ Command CommandParser::parseOneCommand(std::string &commandLine) {
 vector<Command> CommandParser::parse(std::string &commandLine) {
     vector<Command> commands;
     if (!regex_search(commandLine, regex("-\\w+"))) {
-        throw CommandNotFoundException("没有查找到命令");
+        boost::format f = format("没有查找到命令:%s")%commandLine;
+        throw CommandNotFoundException(f.str());
     }
     vector<string> commandsTokens;
     split_regex(commandsTokens, commandLine, regex("-"));

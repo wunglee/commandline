@@ -3,6 +3,7 @@
 #include "Convertors.h"
 #include "Exceptions.h"
 #include <boost/algorithm/string/regex.hpp>
+#include <boost/format.hpp>
 
 class CommandBuilder {
 public:
@@ -18,7 +19,8 @@ public:
     std::vector<T> toListValue(const std::pair<std::string, std::string> &parameterPair,
                                const std::function<T(std::string)> &convertToType) const {
         if (parameterPair.second == "") {
-            throw ValueNotFoundException("命令没有提供参数");
+            boost::format f = boost::format("命令没有提供参数:%s")%parameterPair.first;
+            throw ValueNotFoundException(f.str());
         }
         std::vector<std::string> stringTokens;
         split_regex(stringTokens, parameterPair.second, boost::regex(","));
@@ -35,7 +37,8 @@ class StringCommandBuilder : public CommandBuilder {
 public:
     Command buildCommand(const std::pair<std::string, std::string> &parameterPair) override {
         if (parameterPair.second == "") {
-            throw ValueNotFoundException("字符串命令没有提供参数");
+            boost::format f = boost::format("字符串命令没有提供参数:%s")%parameterPair.first;
+            throw ValueNotFoundException(f.str());
         }
         return Command(parameterPair.first, Convertors::converToString(parameterPair.second));
     }
@@ -51,7 +54,8 @@ class IntegerCommandBuilder : public CommandBuilder {
 public:
     Command buildCommand(const std::pair<std::string, std::string> &parameterPair) override {
         if (parameterPair.second == "") {
-            throw ValueNotFoundException("数值命令没有提供参数");
+            boost::format f = boost::format("数值串命令没有提供参数:%s")%parameterPair.first;
+            throw ValueNotFoundException(f.str());
         }
         return Command(parameterPair.first, Convertors::convertToInt(parameterPair.second));
     }
