@@ -2,6 +2,7 @@
 #include "../src/CommandParser.h"
 #include <boost/optional.hpp>
 #include <boost/optional/optional_io.hpp>
+#include <boost/format.hpp>
 template <typename T>
 void testOneCommandValue(std::string commandline, const std::string flag, const T value, CommandParser& commandParser){
     std::vector<Command> results = commandParser.parse(commandline);
@@ -15,7 +16,11 @@ boost::optional<T> findResult(std::string flag,std::vector<Command> &results) {
             if (typeid(T) == command.value_.type()) {
                 return boost::any_cast<T>(command.value_);
             } else {
-                throw AnytoTypeConvertException("any to type格式转换错误");
+                boost::format f = boost::format(
+                        "any to type格式转换错误，期待的类型是:%s，实际的类型是:%s")
+                        %typeid(T).name()
+                        %command.value_.type().name();
+                throw AnytoTypeConvertException(f.str());
             }
         }
     }
