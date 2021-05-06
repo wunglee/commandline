@@ -22,7 +22,14 @@ public:
         if (parameterPair.second == "") {
             throw ValueNotFoundException("数值命令没有提供参数");
         }
-        return Command(parameterPair.first, stoi(parameterPair.second));
+        return Command(parameterPair.first, convert(parameterPair.second));
+    }
+    int convert(const std::string &intString) const {
+        try{
+            return stoi(intString);
+        }catch(...){
+            throw InvalidValueException("无效的整型参数值");
+        }
     }
 };
 
@@ -32,20 +39,30 @@ public:
         if (parameterPair.second == "") {
             throw ValueNotFoundException("字符串命令没有提供参数");
         }
-        return Command(parameterPair.first, std::string(parameterPair.second));
+        return Command(parameterPair.first, convert(parameterPair.second));
+    }
+    std::string convert(std::string valueString) const {
+        boost::trim(valueString);
+        return valueString;
     }
 };
 
 class BoolCommandBuilder : public CommandBuilder {
 public:
     Command buildCommand(const std::pair<std::string, std::string> &parameterPair) override {
-        if (parameterPair.second == "") {
-            return Command(parameterPair.first, true);
+        bool value = true;
+        if (parameterPair.second != "") {
+            std::string boolString = parameterPair.second;
+            value = convert(boolString);
         }
-        if (parameterPair.second == "true" || parameterPair.second == "false") {
-            return Command(parameterPair.first, parameterPair.second == "true" ? true : false);
+        return Command(parameterPair.first,value);
+    }
+
+    bool convert(const std::string &boolString) const {
+        if (boolString != "true" && boolString != "false") {
+            throw InvalidValueException("无效的布尔参数值");
         }
-        throw InvalidValueException("无效的布尔参数值");
+        return boolString=="true" ? true : false;
     }
 };
 
@@ -72,8 +89,8 @@ public:
 class StringListCommandBuilder : public ListCommandBuilder {
 protected:
     Command buildCommand(const std::pair<std::string, std::string> &parameterPair) override {
-        const std::function<std::string(std::string)> &convertToString=[](std::string s)->std::string{ boost::trim(s); return s; };
-        std::vector<std::string> result = toListValue<std::string>(parameterPair,convertToString);
+        const std::function<std::string(std::string)> &convert=[](std::string s)->std::string{ boost::trim(s); return s; };
+        std::vector<std::string> result = toListValue<std::string>(parameterPair,convert);
         return Command(parameterPair.first, result);
     }
 };
@@ -81,21 +98,21 @@ protected:
 class IntegerListCommandBuilder : public ListCommandBuilder {
 public:
     Command buildCommand(const std::pair<std::string, std::string> &parameterPair) override {
-        const std::function<int(std::string)> &convertToInt=[](std::string s)->int{ return std::stoi(s); };
-        std::vector<int> result = toListValue<int>(parameterPair,convertToInt);
+        const std::function<int(std::string)> &convert=[](std::string s)->int{ return std::stoi(s); };
+        std::vector<int> result = toListValue<int>(parameterPair,convert);
         return Command(parameterPair.first, result);
     }
 };
 class BoolListCommandBuilder : public ListCommandBuilder {
 public:
     Command buildCommand(const std::pair<std::string, std::string> &parameterPair) override {
-        const std::function<bool(std::string)> &convertTobool=[](std::string s)->bool{
+        const std::function<bool(std::string)> &convert=[](std::string s)->bool{
             if(s!="true"&&s!="false"){
                 throw InvalidValueException("无效的布尔参数值");
             }
             return (s=="true")?true:false;
         };
-        std::vector<bool> result = toListValue<bool>(parameterPair,convertTobool);
+        std::vector<bool> result = toListValue<bool>(parameterPair,convert);
         return Command(parameterPair.first, result);
     }
 };
